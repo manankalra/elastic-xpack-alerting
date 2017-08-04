@@ -1,0 +1,66 @@
+{
+  "input" : {
+    "search" : {
+      "request" : {
+        "indices" : "metricbeat-*",
+        "body" : {
+          "size" : 1,
+          "query" : {
+            "bool" : {
+	            "must" : {
+                "term" : { "metricset.name" : "filesystem" }
+              },
+              "filter" : {
+                "range" : {
+                  "@timestamp": {
+                    "from" : "now-1m",
+                    "to" : "now"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  
+  "trigger" : {
+    "schedule" : {
+      "interval" : "10s"
+    }
+  }, 
+  
+  "condition" : {
+    "compare" : {
+      "ctx.payload.hits.hits.0._source.system.filesystem.used.pct" : {
+        "gte" : 0.50
+      }
+    }
+  },
+
+  "throttle_period" : "10s",
+  
+  "actions" : {
+    "logging" : {
+      "logging" : {
+        "text" : "Caution! Disk usage is above 50%."
+      }
+    },
+    "notify-slack" : {
+      "slack" : {
+        "message" : {
+          "to" : [ "#<channel-name>", "@<user-name>" ], 
+          "text" : "Caution! Disk usage is above 50%." 
+        }
+      }
+    },
+    "send_email" : { 
+      "email" : { 
+        "to" : "<user-name>@<domain-name>", 
+        "subject" : "DISK -- Watcher Notification", 
+        "body" : "Caution! Disk usage is above 50%." 
+      }
+    }
+  }
+}

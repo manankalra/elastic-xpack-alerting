@@ -1,0 +1,66 @@
+{
+  "input" : {
+    "search" : {
+      "request" : {
+        "indices" : "metricbeat-*",
+        "body" : {
+          "size" : 1,
+          "query" : {
+            "bool" : {
+	            "must" : {
+                "term" : { "metricset.name" : "memory" }
+              },
+              "filter" : {
+                "range" : {
+                  "@timestamp": {
+                    "from" : "now-1m",
+                    "to" : "now"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  
+  "trigger" : {
+    "schedule" : {
+      "interval" : "10s"
+    }
+  }, 
+  
+  "condition" : {
+    "compare" : {
+      "ctx.payload.hits.hits.0._source.system.memory.actual.used.pct" : {
+        "gte" : 0.50
+      }
+    }
+  },
+
+  "throttle_period" : "10s",
+
+  "actions" : {
+    "logging" : {
+      "logging" : {
+        "text" : "Caution! Memory usage is above 50%."
+      }
+    },
+    "notify-slack" : {
+      "slack" : {
+        "message" : {
+          "to" : [ "#<channel-name>", "@<user-name>" ], 
+          "text" : "Caution! Memory usage is above 50%." 
+        }
+      }
+    },
+    "send_email" : { 
+      "email" : { 
+        "to" : "<user-name>@<domain-name>", 
+        "subject" : "Memory -- Watcher Notification", 
+        "body" : "Caution! Memory usage is above 50%." 
+      }
+    }
+  }
+}
