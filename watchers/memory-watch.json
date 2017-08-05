@@ -57,7 +57,7 @@
     },
     "send_email" : { 
       "email" : { 
-        "to" : "<user-name>@<domain-name>", 
+        "to" : "<username>@<domainname>", 
         "subject" : "Memory -- Watcher Notification", 
         "body" : "Caution! Memory usage is above 50%." 
       }

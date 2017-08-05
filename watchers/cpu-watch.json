@@ -34,7 +34,7 @@
   "condition" : {
     "compare" : {
       "ctx.payload.hits.hits.0._source.system.cpu.user.pct" : {
-        "gte" : 0.10
+        "gte" : 0.50
       }
     }
   },
@@ -44,22 +44,22 @@
   "actions" : {
     "logging" : {
       "logging" : {
-        "text" : "Caution! CPU usage is above 10%."
+        "text" : "Caution! CPU usage is above 50%."
       }
     },
     "notify-slack" : {
       "slack" : {
         "message" : {
-          "to" : [ "#cpu-alerts", "@manankalra" ], 
+          "to" : [ "#<channel-name>", "@<user-name>" ], 
           "text" : "Caution! CPU usage is above 50%." 
         }
       }
     },
     "send_email" : { 
       "email" : { 
-        "to" : "mananenroll29@gmail.com", 
+        "to" : "<username>@<domainname>", 
         "subject" : "CPU -- Watcher Notification", 
-        "body" : "Caution! Memory usage is above 10%." 
+        "body" : "Caution! Memory usage is above 50%." 
       }
     }
   }

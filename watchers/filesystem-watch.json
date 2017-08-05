@@ -57,7 +57,7 @@
     },
     "send_email" : { 
       "email" : { 
-        "to" : "<user-name>@<domain-name>", 
+        "to" : "<username>@<domainname>", 
         "subject" : "DISK -- Watcher Notification", 
         "body" : "Caution! Disk usage is above 50%." 
       }
